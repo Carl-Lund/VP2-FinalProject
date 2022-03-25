@@ -34,6 +34,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnEmpty = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnLoad = new javax.swing.JButton();
+        playArea = new playmaker.ui.PlayAreaPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -127,6 +128,19 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        playArea.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "PlayArea", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        javax.swing.GroupLayout playAreaLayout = new javax.swing.GroupLayout(playArea);
+        playArea.setLayout(playAreaLayout);
+        playAreaLayout.setHorizontalGroup(
+            playAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        playAreaLayout.setVerticalGroup(
+            playAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 248, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -134,18 +148,24 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnPlayPause)
-                    .addComponent(btnEmpty)
-                    .addComponent(btnSave)
-                    .addComponent(btnLoad))
-                .addGap(52, 52, 52)
-                .addComponent(jpToolChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addComponent(playArea, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnPlayPause)
+                            .addComponent(btnEmpty)
+                            .addComponent(btnSave)
+                            .addComponent(btnLoad))
+                        .addGap(52, 52, 52)
+                        .addComponent(jpToolChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 30, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(266, 266, 266)
+                .addContainerGap()
+                .addComponent(playArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(7, 7, 7)
@@ -250,6 +270,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnPlayPause;
     private javax.swing.JButton btnSave;
     private javax.swing.JPanel jpToolChooser;
+    private playmaker.ui.PlayAreaPanel playArea;
     private javax.swing.JToggleButton tbtnDPlayer;
     private javax.swing.JToggleButton tbtnOPlayer;
     private javax.swing.JToggleButton tbtnPath;
