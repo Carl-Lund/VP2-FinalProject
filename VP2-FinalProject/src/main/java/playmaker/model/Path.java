@@ -6,6 +6,7 @@
 package playmaker.model;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ public class Path {
     
     public void paint(Graphics2D g2) {
         g2.setStroke(new BasicStroke(2));
+        g2.setColor(Color.BLACK);
         
         if (pathYPoints.size() > 1) {
             for (int i = 0; i < pathYPoints.size(); ++i) {
@@ -39,4 +41,29 @@ public class Path {
         }
     }
     
+    public ArrayList getPathXPoints() {
+        return pathXPoints;
+    }
+    
+    public ArrayList getPathYPoints() {
+        return pathYPoints;
+    }
+    
+    public int getStartX() {
+        return pathXPoints.get(0);
+    }
+    
+    public void clearPath() {
+       int tmpX = this.getStartX();
+       int tmpY = this.getStartY();
+       pathXPoints.clear();
+       pathYPoints.clear();
+       pathXPoints.add(tmpX);
+       pathYPoints.add(tmpY);
+       
+    }
+    
+    public int getStartY() {
+        return pathYPoints.get(0);
+    }
 }

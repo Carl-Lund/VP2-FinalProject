@@ -8,17 +8,20 @@ package playmaker.model;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import playmaker.ui.RepaintHandler;
 
 /**
  *
  * @author carl
  */
-public class DPlayer extends Player{
+public class DPlayer extends Player {
     
-    public DPlayer(int x, int y) {
+    public DPlayer(int x, int y, RepaintHandler handler) {
         this.playerX = x;
-        this.playerY = y;
+        this.playerY = y - (y % 20);
         path = new Path();
+        side = "defense";
+        listener = handler;
     }
     
     @Override
@@ -26,6 +29,7 @@ public class DPlayer extends Player{
         g2.setStroke(new BasicStroke(4));
         
         // Drawing X shape for defensive player
+        g2.setColor(color);
         g2.drawLine(playerX - halfW, playerY - halfH, playerX + halfW, playerY + halfH);
         g2.drawLine(playerX - halfW, playerY + halfH, playerX + halfW, playerY - halfH);
     }

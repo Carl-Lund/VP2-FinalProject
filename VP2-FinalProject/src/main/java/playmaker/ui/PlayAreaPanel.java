@@ -4,12 +4,18 @@
  * and open the template in the editor.
  */
 package playmaker.ui;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import javax.swing.Timer;
 import playmaker.model.DPlayer;
 import playmaker.model.OPlayer;
 import playmaker.model.PlayDetails;
@@ -19,20 +25,23 @@ import playmaker.model.Player;
  *
  * @author carl
  */
-public class PlayAreaPanel extends javax.swing.JPanel {
+public class PlayAreaPanel extends javax.swing.JPanel implements RepaintHandler, ControllerHandler, PlayerHandler, ActionListener {
     private PlayDetails currentPlay;
-     
-    private double fieldX = this.getX();
-    private double fieldY = this.getY();
-    private double fieldW = this.getWidth();
-    private double fieldH = this.getHeight();
+    private boolean inPlayArea;
+    private int cursorX, cursorY;
+    Timer tm = new Timer(33, this); // 33 for ~30 frames a second.
     
-    private ToolType toolType = PlayAreaPanel.ToolType.OFFENSE;
-     
+    private ToolType toolType = ToolType.OFFENSE;
 
     public PlayAreaPanel() {
         currentPlay = new PlayDetails();
+        inPlayArea = false;
         initComponents();
+    }
+
+    @Override
+    public void repaintArea() {
+        repaint();
     }
     
     public enum ToolType {
@@ -48,6 +57,60 @@ public class PlayAreaPanel extends javax.swing.JPanel {
     
     public void emptyArea() {
         currentPlay.emptyPlay();
+        repaint();
+    }
+    
+    public void startPlay() {
+        currentPlay.movePlayers();
+        repaint();
+    }
+    
+    public void resetPlayers() {
+        currentPlay.resetPlayers();
+        repaint();
+    }
+    
+    public void movePlayer() {
+        currentPlay.movePlayer();
+        repaint();
+    }
+    
+    public void stopPlayer() {
+        currentPlay.stopPlayer();
+    }
+    
+    public void resetPlayer() {
+        currentPlay.resetPlayer();
+        repaint();
+    }
+    
+    public void removePlayer() {
+        currentPlay.removePlayer();
+        repaint();
+    }
+    
+    public void removePlayerPath() {
+        currentPlay.removePlayerPath();
+        repaint();
+    }
+    
+    public void startCursor() {
+        inPlayArea = true;
+        tm.start();
+        repaint();
+    }
+    
+    public void stopCursor() {
+        inPlayArea = false;
+        tm.stop();
+        repaint();
+    }
+    
+    public void actionPerformed(ActionEvent evt) {
+        int mouseX = this.getMousePosition().x;
+        int mouseY = this.getMousePosition().y;
+        cursorX = mouseX;
+        cursorY = mouseY - (mouseY % 20);
         repaint();
     }
 
@@ -81,20 +144,21 @@ public class PlayAreaPanel extends javax.swing.JPanel {
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         int mouseX = evt.getX();
         int mouseY = evt.getY();
- 
+        
+        // 
         switch (toolType) {
             case OFFENSE:
-                OPlayer tmpOP = new OPlayer(mouseX, mouseY);
+                OPlayer tmpOP = new OPlayer(mouseX, mouseY, this);
                 currentPlay.addOPlayer(tmpOP);
                 break;
                 
             case DEFENSE:
-                DPlayer tmpDP = new DPlayer(mouseX, mouseY);
+                DPlayer tmpDP = new DPlayer(mouseX, mouseY, this);
                 currentPlay.addDPlayer(tmpDP);
                 break;
                 
             case PATH:
-                currentPlay.addPoint(mouseX, mouseY);
+                currentPlay.addPathPoint(mouseX, mouseY);
                 break;
                 
             case SELECT:
@@ -137,6 +201,17 @@ public class PlayAreaPanel extends javax.swing.JPanel {
         Point point = new Point(mouse.getLocation()); 
         double mouseX = point.getX();
         double mouseY = point.getY(); */
+        
+        if ((toolType == ToolType.OFFENSE) && (inPlayArea == true)) {
+            g2.setColor(Color.BLUE);
+            g2.setStroke(new BasicStroke(4));
+            g2.drawOval(cursorX - 15, cursorY - 15, 30, 30);
+        } else if ((toolType == ToolType.DEFENSE) && (inPlayArea == true)) {           
+            g2.setStroke(new BasicStroke(4));
+            g2.setColor(Color.BLUE);
+            g2.drawLine(cursorX - 15, cursorY - 15, cursorX + 15, cursorY + 15);
+            g2.drawLine(cursorX - 15, cursorY + 15, cursorX + 15, cursorY - 15);
+        }
         
         currentPlay.drawPlayers(g2);
         currentPlay.drawPaths(g2);
