@@ -8,13 +8,14 @@ package playmaker.model;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author carl
  */
-public class PlayDetails{
+public class PlayDetails implements Serializable {
     private ArrayList<OPlayer> offense;
     private ArrayList<DPlayer> defense;
     
@@ -45,8 +46,8 @@ public class PlayDetails{
         offense.add(tmpOP); 
         playerChosen = tmpOP;
         if (tmpOP.path.getListSize() == 0) {
-                tmpOP.path.addXPoint(tmpOP.getX());
-                tmpOP.path.addYPoint(tmpOP.getY());
+                tmpOP.path.addXPoint((int)tmpOP.getX());
+                tmpOP.path.addYPoint((int)tmpOP.getY());
         }
     }
     
@@ -54,8 +55,8 @@ public class PlayDetails{
         defense.add(tmpDP); 
         playerChosen = tmpDP;
         if (tmpDP.path.getListSize() == 0) {
-                tmpDP.path.addXPoint(tmpDP.getX());
-                tmpDP.path.addYPoint(tmpDP.getY());
+                tmpDP.path.addXPoint((int)tmpDP.getX());
+                tmpDP.path.addYPoint((int)tmpDP.getY());
         }
     }
     
@@ -63,8 +64,8 @@ public class PlayDetails{
     public void onPlayerClicked(Player p) {
         if (p != null) {
             if (p.path.getListSize() == 0) { 
-                p.path.addXPoint(p.getX());
-                p.path.addYPoint(p.getY());
+                p.path.addXPoint((int)p.getX());
+                p.path.addYPoint((int)p.getY());
             }
             playerChosen = p;         
         }    
@@ -148,11 +149,15 @@ public class PlayDetails{
     
     public void drawPaths(Graphics2D g2) {
         for(OPlayer p : offense){
-            p.path.paint(g2);
+            if (p.path != null) {
+                p.path.paint(g2);
+            }
         }
         
         for(DPlayer p : defense){
-            p.path.paint(g2);
+            if (p.path != null) {
+                p.path.paint(g2);
+            }
         }
     }
 

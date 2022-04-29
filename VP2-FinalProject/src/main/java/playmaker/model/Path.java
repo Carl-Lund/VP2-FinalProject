@@ -8,13 +8,14 @@ package playmaker.model;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author carl
  */
-public class Path {
+public class Path implements Serializable {
     private ArrayList<Integer> pathXPoints;
     private ArrayList<Integer> pathYPoints;
     
@@ -27,19 +28,6 @@ public class Path {
     public void addXPoint(int x){pathXPoints.add(x);}
     public void addYPoint(int y){pathYPoints.add(y);}
     public int getListSize(){return pathXPoints.size();}
-    
-    public void paint(Graphics2D g2) {
-        g2.setStroke(new BasicStroke(2));
-        g2.setColor(Color.BLACK);
-        
-        if (pathYPoints.size() > 1) {
-            for (int i = 0; i < pathYPoints.size(); ++i) {
-                if (i + 1 != pathYPoints.size()) {
-                    g2.drawLine(pathXPoints.get(i), pathYPoints.get(i), pathXPoints.get(i+1), pathYPoints.get(i+1));
-                }
-            }
-        }
-    }
     
     public ArrayList getPathXPoints() {
         return pathXPoints;
@@ -65,5 +53,18 @@ public class Path {
     
     public int getStartY() {
         return pathYPoints.get(0);
+    }
+    
+    public void paint(Graphics2D g2) {
+        g2.setStroke(new BasicStroke(2));
+        g2.setColor(Color.BLACK);
+        
+        if (pathYPoints.size() > 1) {
+            for (int i = 0; i < pathYPoints.size(); ++i) {
+                if (i + 1 != pathYPoints.size()) {
+                    g2.drawLine(pathXPoints.get(i), pathYPoints.get(i), pathXPoints.get(i+1), pathYPoints.get(i+1));
+                }
+            }
+        }
     }
 }

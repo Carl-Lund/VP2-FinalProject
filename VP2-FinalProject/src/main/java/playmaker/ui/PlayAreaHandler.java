@@ -9,10 +9,21 @@ package playmaker.ui;
  *
  * @author carl
  */
-public interface PlayerHandler {
+public interface PlayAreaHandler {
+    // Communication from the Player Details Panel
     public void movePlayer();
     public void stopPlayer();
     public void resetPlayer();
     public void removePlayer();
     public void removePlayerPath();
+    
+    // So that the players can repaint themselves.
+    public void repaintArea();
+    
+    // Communication from the Play Controls Panel.
+    public void startPlay();
+    public void resetPlayers();
+    public void emptyArea();
+    public void savePlay();
+    public void loadPlay();
 }

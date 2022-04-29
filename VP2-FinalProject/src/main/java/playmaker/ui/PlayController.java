@@ -10,7 +10,7 @@ package playmaker.ui;
  * @author carl
  */
 public class PlayController extends javax.swing.JPanel {
-    private ControllerHandler controllerListener;
+    private PlayAreaHandler controllerListener;
     /**
      * Creates new form PlayController
      */
@@ -18,7 +18,7 @@ public class PlayController extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void setControllerListener(ControllerHandler handler) {
+    public void setControllerListener(PlayAreaHandler handler) {
         controllerListener = handler;
     }
     
@@ -57,8 +57,18 @@ public class PlayController extends javax.swing.JPanel {
         });
 
         btnSave.setText("Save Play");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnLoad.setText("Load Play");
+        btnLoad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoadActionPerformed(evt);
+            }
+        });
 
         btnReset.setText("Reset All");
         btnReset.addActionListener(new java.awt.event.ActionListener() {
@@ -122,6 +132,14 @@ public class PlayController extends javax.swing.JPanel {
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         controllerListener.resetPlayers();
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        controllerListener.savePlay();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
+        controllerListener.loadPlay();
+    }//GEN-LAST:event_btnLoadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

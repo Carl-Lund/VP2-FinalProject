@@ -92,11 +92,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Save Play"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnLoad">
       <Properties>
         <Property name="text" type="java.lang.String" value="Load Play"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoadActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnReset">
       <Properties>

@@ -10,7 +10,7 @@ package playmaker.ui;
  * @author carl
  */
 public class PlayerDetails extends javax.swing.JPanel {
-    private PlayerHandler playerListener;
+    private PlayAreaHandler playerListener;
     /**
      * Creates new form PlayerDetails
      */
@@ -18,7 +18,7 @@ public class PlayerDetails extends javax.swing.JPanel {
         initComponents();
     }
     
-    public void setPlayerListener(PlayerHandler handler) {
+    public void setPlayerListener(PlayAreaHandler handler) {
         playerListener = handler;
     }
 

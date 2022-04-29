@@ -8,15 +8,16 @@ package playmaker.model;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import playmaker.ui.RepaintHandler;
+import java.io.Serializable;
+import playmaker.ui.PlayAreaHandler;
 
 /**
  *
  * @author carl
  */
-public class DPlayer extends Player {
+public class DPlayer extends Player implements Serializable{
     
-    public DPlayer(int x, int y, RepaintHandler handler) {
+    public DPlayer(int x, int y, PlayAreaHandler handler) {
         this.playerX = x;
         this.playerY = y - (y % 20);
         path = new Path();
@@ -30,8 +31,8 @@ public class DPlayer extends Player {
         
         // Drawing X shape for defensive player
         g2.setColor(color);
-        g2.drawLine(playerX - halfW, playerY - halfH, playerX + halfW, playerY + halfH);
-        g2.drawLine(playerX - halfW, playerY + halfH, playerX + halfW, playerY - halfH);
+        g2.drawLine((int)(playerX - halfW), (int)(playerY - halfH), (int)(playerX + halfW), (int)(playerY + halfH));
+        g2.drawLine((int)(playerX - halfW), (int)(playerY + halfH), (int)(playerX + halfW), (int)(playerY - halfH));
     }
     
 }

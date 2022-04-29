@@ -14,28 +14,37 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Timer;
 import playmaker.model.DPlayer;
 import playmaker.model.OPlayer;
 import playmaker.model.PlayDetails;
+import playmaker.model.PlaySerialization;
 import playmaker.model.Player;
 
 /**
  *
  * @author carl
  */
-public class PlayAreaPanel extends javax.swing.JPanel implements RepaintHandler, ControllerHandler, PlayerHandler, ActionListener {
+public class PlayAreaPanel extends javax.swing.JPanel implements PlayAreaHandler, ActionListener {
     private PlayDetails currentPlay;
+    private PlaySerialization playIO;
     private boolean inPlayArea;
     private int cursorX, cursorY;
-    Timer tm = new Timer(33, this); // 33 for ~30 frames a second.
+    private Timer tm = new Timer(33, this); // 33 for ~30 frames a second. 
+                                            // The purpose for this timer is to update the drawing of the cursor.
     
     private ToolType toolType = ToolType.OFFENSE;
 
     public PlayAreaPanel() {
         currentPlay = new PlayDetails();
         inPlayArea = false;
+        playIO = new PlaySerialization();
         initComponents();
     }
 
@@ -70,15 +79,40 @@ public class PlayAreaPanel extends javax.swing.JPanel implements RepaintHandler,
         repaint();
     }
     
+    @Override
+    public void savePlay() {
+        try {
+            playIO.savePlay(currentPlay);
+        } catch (IOException ex) {
+            System.out.println("IO Exception when trying to save play.");
+        }
+    }
+    
+    @Override
+    public void loadPlay() {
+        try {
+            currentPlay = playIO.loadPlay();
+        } catch (IOException ex) {
+            System.out.println("IO Exception when trying to load play.");
+        } catch (ClassNotFoundException ex) {
+            System.out.println("Class Not Found Exception when trying to load play.");
+        }
+        
+        repaint();
+    }
+    
+    @Override
     public void movePlayer() {
         currentPlay.movePlayer();
         repaint();
     }
     
+    @Override
     public void stopPlayer() {
         currentPlay.stopPlayer();
     }
     
+    @Override
     public void resetPlayer() {
         currentPlay.resetPlayer();
         repaint();
@@ -203,12 +237,12 @@ public class PlayAreaPanel extends javax.swing.JPanel implements RepaintHandler,
         double mouseY = point.getY(); */
         
         if ((toolType == ToolType.OFFENSE) && (inPlayArea == true)) {
-            g2.setColor(Color.BLUE);
+            g2.setColor(Color.DARK_GRAY);
             g2.setStroke(new BasicStroke(4));
             g2.drawOval(cursorX - 15, cursorY - 15, 30, 30);
         } else if ((toolType == ToolType.DEFENSE) && (inPlayArea == true)) {           
             g2.setStroke(new BasicStroke(4));
-            g2.setColor(Color.BLUE);
+            g2.setColor(Color.DARK_GRAY);
             g2.drawLine(cursorX - 15, cursorY - 15, cursorX + 15, cursorY + 15);
             g2.drawLine(cursorX - 15, cursorY + 15, cursorX + 15, cursorY - 15);
         }
