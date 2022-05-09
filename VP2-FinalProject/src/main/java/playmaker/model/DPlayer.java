@@ -6,10 +6,9 @@
 package playmaker.model;
 
 import java.awt.BasicStroke;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.Serializable;
-import playmaker.ui.PlayAreaHandler;
+import playmaker.ui.RepaintHandler;
 
 /**
  *
@@ -17,12 +16,13 @@ import playmaker.ui.PlayAreaHandler;
  */
 public class DPlayer extends Player implements Serializable{
     
-    public DPlayer(int x, int y, PlayAreaHandler handler) {
+    public DPlayer(int x, int y, RepaintHandler handler) {
         this.playerX = x;
-        this.playerY = y - (y % 20);
+        this.playerY = y - (y % 20); // Modded by 20 so that the user can draw straight lines of scrimmage.
         path = new Path();
         side = "defense";
-        listener = handler;
+        scoutView = false;
+        this.handler = handler;
     }
     
     @Override
@@ -31,8 +31,8 @@ public class DPlayer extends Player implements Serializable{
         
         // Drawing X shape for defensive player
         g2.setColor(color);
-        g2.drawLine((int)(playerX - halfW), (int)(playerY - halfH), (int)(playerX + halfW), (int)(playerY + halfH));
-        g2.drawLine((int)(playerX - halfW), (int)(playerY + halfH), (int)(playerX + halfW), (int)(playerY - halfH));
+        g2.drawLine((int)(playerX - halfW), (int)(playerY - halfW), (int)(playerX + halfW), (int)(playerY + halfW));
+        g2.drawLine((int)(playerX - halfW), (int)(playerY + halfW), (int)(playerX + halfW), (int)(playerY - halfW));
     }
     
 }

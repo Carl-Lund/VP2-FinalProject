@@ -3,14 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package playmaker.model;
+package playmaker.ui;
 
-import java.io.File;
-import java.io.IOException;
 /**
  *
  * @author carl
  */
-public class IOController {
-    
+public interface PlayListener {
+    public void onUpdate();
 }

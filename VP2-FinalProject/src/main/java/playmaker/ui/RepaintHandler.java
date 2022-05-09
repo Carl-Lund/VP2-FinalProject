@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package playmaker.model;
+package playmaker.ui;
 
 /**
  *
  * @author carl
  */
-public interface Tools {
-    
+public interface RepaintHandler {
+    // So that the players can repaint themselves.
+    public void repaintArea();
 }

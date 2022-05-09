@@ -7,24 +7,32 @@ package playmaker.ui;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import playmaker.model.PlayModel;
 
 /**
  *
  * @author carl
  */
-public class MainWindow extends javax.swing.JFrame {
+public class PlayMakerWindow extends javax.swing.JFrame {
+    private PlayModel currentPlay;
     
-    public MainWindow() {
+    public PlayMakerWindow(PlayModel currentPlay) {
+        // When the play maker window constructor is called in it's creation,
+        // the instances currentPlay is set to the one that is passed. When the
+        // fields playAreaPanel, playerDetails, and playController are created they
+        // are also have currentPlay passed to them. 
+        this.currentPlay = currentPlay;
+        
         initComponents();
-        playController.setControllerListener(playArea);
-        playerDetails.setPlayerListener(playArea);
-        playArea.addMouseListener(new MouseAdapter() {
+        // Adds a mouse listner to the play area panel so that it knows when to
+        // start and stop drawing the cursor.
+        playAreaPanel.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
-                playArea.startCursor();
+                playAreaPanel.startCursor();
             }
             
             public void mouseExited(MouseEvent evt) {
-                playArea.stopCursor();
+                playAreaPanel.stopCursor();
             }
             
         });
@@ -45,8 +53,9 @@ public class MainWindow extends javax.swing.JFrame {
         tbtnDPlayer = new javax.swing.JToggleButton();
         tbtnPath = new javax.swing.JToggleButton();
         tbtnSelect = new javax.swing.JToggleButton();
-        playArea = new playmaker.ui.PlayAreaPanel();
-        playerDetails = new playmaker.ui.PlayerDetails();
+        playerDetails = new playmaker.ui.PlayerDetails(currentPlay);
+        playAreaPanel = new playmaker.ui.PlayAreaPanel(currentPlay);
+        lblPlayArea = new javax.swing.JLabel();
         playController = new playmaker.ui.PlayController();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -113,20 +122,29 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        playArea.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "PlayArea", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
-
-        javax.swing.GroupLayout playAreaLayout = new javax.swing.GroupLayout(playArea);
-        playArea.setLayout(playAreaLayout);
-        playAreaLayout.setHorizontalGroup(
-            playAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 536, Short.MAX_VALUE)
-        );
-        playAreaLayout.setVerticalGroup(
-            playAreaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 248, Short.MAX_VALUE)
-        );
-
         playerDetails.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        playAreaPanel.setBackground(new java.awt.Color(255, 255, 255));
+        playAreaPanel.setBorder(new javax.swing.border.MatteBorder(null));
+
+        lblPlayArea.setText("Play Area");
+
+        javax.swing.GroupLayout playAreaPanelLayout = new javax.swing.GroupLayout(playAreaPanel);
+        playAreaPanel.setLayout(playAreaPanelLayout);
+        playAreaPanelLayout.setHorizontalGroup(
+            playAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(playAreaPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblPlayArea)
+                .addContainerGap(716, Short.MAX_VALUE))
+        );
+        playAreaPanelLayout.setVerticalGroup(
+            playAreaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(playAreaPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblPlayArea)
+                .addContainerGap(396, Short.MAX_VALUE))
+        );
 
         playController.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -137,33 +155,27 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(228, 228, 228)
-                        .addComponent(jpToolChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
+                        .addContainerGap()
                         .addComponent(playController, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(playArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(playerDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(playAreaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(playerDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(337, 337, 337)
+                        .addComponent(jpToolChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(playerDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(playArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(49, 49, 49)
-                                .addComponent(playController, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jpToolChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(playController, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(playAreaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(playerDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jpToolChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -173,70 +185,34 @@ public class MainWindow extends javax.swing.JFrame {
         tbtnDPlayer.setSelected(false);
         tbtnPath.setSelected(false);
         tbtnSelect.setSelected(false);
-        playArea.setToolType(PlayAreaPanel.ToolType.OFFENSE);
+        playAreaPanel.setToolType(PlayAreaPanel.ToolType.OFFENSE);
     }//GEN-LAST:event_tbtnOPlayerActionPerformed
 
     private void tbtnDPlayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnDPlayerActionPerformed
         tbtnOPlayer.setSelected(false);
         tbtnPath.setSelected(false);
         tbtnSelect.setSelected(false);
-        playArea.setToolType(PlayAreaPanel.ToolType.DEFENSE);
+        playAreaPanel.setToolType(PlayAreaPanel.ToolType.DEFENSE);
     }//GEN-LAST:event_tbtnDPlayerActionPerformed
 
     private void tbtnPathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnPathActionPerformed
         tbtnOPlayer.setSelected(false);
         tbtnDPlayer.setSelected(false);
         tbtnSelect.setSelected(false);
-        playArea.setToolType(PlayAreaPanel.ToolType.PATH);
+        playAreaPanel.setToolType(PlayAreaPanel.ToolType.PATH);
     }//GEN-LAST:event_tbtnPathActionPerformed
 
     private void tbtnSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnSelectActionPerformed
         tbtnOPlayer.setSelected(false);
         tbtnDPlayer.setSelected(false);
         tbtnPath.setSelected(false);
-        playArea.setToolType(PlayAreaPanel.ToolType.SELECT);
+        playAreaPanel.setToolType(PlayAreaPanel.ToolType.SELECT);
     }//GEN-LAST:event_tbtnSelectActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainWindow().setVisible(true);
-            }
-        });
-        
-        
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jpToolChooser;
-    private playmaker.ui.PlayAreaPanel playArea;
+    private javax.swing.JLabel lblPlayArea;
+    private playmaker.ui.PlayAreaPanel playAreaPanel;
     private playmaker.ui.PlayController playController;
     private playmaker.ui.PlayerDetails playerDetails;
     private javax.swing.JToggleButton tbtnDPlayer;
@@ -245,22 +221,3 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JToggleButton tbtnSelect;
     // End of variables declaration//GEN-END:variables
 }
-
-
-// if (playerY <= pathY.get(path.getListSize())) {
-//            playerY = pathY.get(path.getListSize());
-//            playerX = pathX.get(path.getListSize());
-//        } else if (playerY >= pathY.get(nextPoint)) {
-//            nextPoint++;
-//            pastPoint++;
-//            xDif = pathX.get(nextPoint) - pathX.get(pastPoint);
-//            yDif = pathY.get(nextPoint) - pathY.get(pastPoint);
-//            xVel = xDif / 20;
-//            yVel = yDif / 20;
-//        }
-//        
-//        if (playerY > pathY.get(path.getListSize())) {
-//            playerX  = playerX + xVel;
-//            playerY = playerY + yVel;
-//            listener.repaintArea();
-//        }

@@ -5,24 +5,21 @@
  */
 package playmaker.ui;
 
+import playmaker.model.PlayModel;
+
 /**
  *
  * @author carl
  */
 public class PlayController extends javax.swing.JPanel {
-    private PlayAreaHandler controllerListener;
+    private PlayModel currentPlay;
     /**
      * Creates new form PlayController
      */
     public PlayController() {
+        this.currentPlay = PlayModel.getInstance();
         initComponents();
     }
-    
-    public void setControllerListener(PlayAreaHandler handler) {
-        controllerListener = handler;
-    }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -35,7 +32,7 @@ public class PlayController extends javax.swing.JPanel {
 
         jlblHeader = new javax.swing.JLabel();
         btnPlayPause = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnEmpty = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnLoad = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
@@ -49,10 +46,10 @@ public class PlayController extends javax.swing.JPanel {
             }
         });
 
-        jButton1.setText("Empty");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnEmpty.setText("Empty");
+        btnEmpty.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnEmptyActionPerformed(evt);
             }
         });
 
@@ -90,7 +87,7 @@ public class PlayController extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
+                            .addComponent(btnEmpty)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(btnPlayPause))))
@@ -110,7 +107,7 @@ public class PlayController extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnPlayPause, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(btnEmpty)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnReset)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -122,32 +119,40 @@ public class PlayController extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPlayPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayPauseActionPerformed
-        controllerListener.startPlay();
+        
+        if (btnPlayPause.getText() == "Play") {
+            currentPlay.movePlayers();
+            btnPlayPause.setText("Pause");
+        } else {
+            currentPlay.stopPlayers();
+            btnPlayPause.setText("Play");
+        }
     }//GEN-LAST:event_btnPlayPauseActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        controllerListener.emptyArea();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnEmptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmptyActionPerformed
+        currentPlay.emptyPlay();
+    }//GEN-LAST:event_btnEmptyActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
-        controllerListener.resetPlayers();
+        currentPlay.resetPlayers();
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        controllerListener.savePlay();
+        currentPlay.savePlay();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnLoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadActionPerformed
-        controllerListener.loadPlay();
+        currentPlay.loadPlay();
     }//GEN-LAST:event_btnLoadActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEmpty;
     private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnPlayPause;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSave;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jlblHeader;
     // End of variables declaration//GEN-END:variables
+
 }

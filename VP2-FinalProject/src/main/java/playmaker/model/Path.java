@@ -16,6 +16,7 @@ import java.util.ArrayList;
  * @author carl
  */
 public class Path implements Serializable {
+    // Need to separate the x and y values in order to draw the path lines more efficiently.
     private ArrayList<Integer> pathXPoints;
     private ArrayList<Integer> pathYPoints;
     
@@ -41,6 +42,7 @@ public class Path implements Serializable {
         return pathXPoints.get(0);
     }
     
+    // Clears the path points but also makes sure to save the first point. Easier to redraw a path this way if need be.
     public void clearPath() {
        int tmpX = this.getStartX();
        int tmpY = this.getStartY();
@@ -59,6 +61,7 @@ public class Path implements Serializable {
         g2.setStroke(new BasicStroke(2));
         g2.setColor(Color.BLACK);
         
+        // Essentially, if there's more than two points in the path, then draw a line between each point until you reach the end of the path.
         if (pathYPoints.size() > 1) {
             for (int i = 0; i < pathYPoints.size(); ++i) {
                 if (i + 1 != pathYPoints.size()) {

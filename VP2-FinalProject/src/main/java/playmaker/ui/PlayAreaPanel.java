@@ -8,22 +8,12 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Ellipse2D;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Timer;
 import playmaker.model.DPlayer;
 import playmaker.model.OPlayer;
-import playmaker.model.PlayDetails;
+import playmaker.model.PlayModel;
 import playmaker.model.PlaySerialization;
 import playmaker.model.Player;
 
@@ -31,28 +21,36 @@ import playmaker.model.Player;
  *
  * @author carl
  */
-public class PlayAreaPanel extends javax.swing.JPanel implements PlayAreaHandler, ActionListener {
-    private PlayDetails currentPlay;
-    private PlaySerialization playIO;
-    private boolean inPlayArea;
+public class PlayAreaPanel extends javax.swing.JPanel implements ActionListener, PlayListener, RepaintHandler {
+    private PlayModel currentPlay;
+    private boolean inPlayArea; // To keep track if the mouse is in the Play Area.
     private int cursorX, cursorY;
-    private Timer tm = new Timer(33, this); // 33 for ~30 frames a second. 
-                                            // The purpose for this timer is to update the drawing of the cursor.
+    private final Timer tm = new Timer(33, this); // 33 for ~30 frames a second. 
+                                                  // The purpose for this timer is to update the drawing of the cursor.
     
     private ToolType toolType = ToolType.OFFENSE;
-
+    
     public PlayAreaPanel() {
-        currentPlay = new PlayDetails();
-        inPlayArea = false;
-        playIO = new PlaySerialization();
         initComponents();
     }
 
-    @Override
+    public PlayAreaPanel(PlayModel currentPlay) {
+        this.currentPlay = currentPlay;
+        currentPlay.addObserver(this);
+        inPlayArea = false;
+        initComponents();
+    }
+
     public void repaintArea() {
         repaint();
     }
+
+    @Override
+    public void onUpdate() {
+        repaint();
+    }
     
+    // An enum to keep track of which tool is chosen.
     public enum ToolType {
         OFFENSE,
         DEFENSE,
@@ -62,70 +60,6 @@ public class PlayAreaPanel extends javax.swing.JPanel implements PlayAreaHandler
     
     public void setToolType(ToolType toolType) {
         this.toolType = toolType;
-    }
-    
-    public void emptyArea() {
-        currentPlay.emptyPlay();
-        repaint();
-    }
-    
-    public void startPlay() {
-        currentPlay.movePlayers();
-        repaint();
-    }
-    
-    public void resetPlayers() {
-        currentPlay.resetPlayers();
-        repaint();
-    }
-    
-    @Override
-    public void savePlay() {
-        try {
-            playIO.savePlay(currentPlay);
-        } catch (IOException ex) {
-            System.out.println("IO Exception when trying to save play.");
-        }
-    }
-    
-    @Override
-    public void loadPlay() {
-        try {
-            currentPlay = playIO.loadPlay();
-        } catch (IOException ex) {
-            System.out.println("IO Exception when trying to load play.");
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Class Not Found Exception when trying to load play.");
-        }
-        
-        repaint();
-    }
-    
-    @Override
-    public void movePlayer() {
-        currentPlay.movePlayer();
-        repaint();
-    }
-    
-    @Override
-    public void stopPlayer() {
-        currentPlay.stopPlayer();
-    }
-    
-    @Override
-    public void resetPlayer() {
-        currentPlay.resetPlayer();
-        repaint();
-    }
-    
-    public void removePlayer() {
-        currentPlay.removePlayer();
-        repaint();
-    }
-    
-    public void removePlayerPath() {
-        currentPlay.removePlayerPath();
-        repaint();
     }
     
     public void startCursor() {
@@ -179,7 +113,8 @@ public class PlayAreaPanel extends javax.swing.JPanel implements PlayAreaHandler
         int mouseX = evt.getX();
         int mouseY = evt.getY();
         
-        // 
+        // Switch case that does something specific based on the case every time 
+        // the mouse is clicked within the play area.
         switch (toolType) {
             case OFFENSE:
                 OPlayer tmpOP = new OPlayer(mouseX, mouseY, this);
@@ -198,6 +133,7 @@ public class PlayAreaPanel extends javax.swing.JPanel implements PlayAreaHandler
             case SELECT:
                 Player clickedPlayer = null;
                 
+                // Loops through the offense and defense to see if a player was clicked.
                 for(int i = currentPlay.getNumOPlayers()-1; i >= 0 ; i--){
                     OPlayer tmp = currentPlay.getOPlayer(i);
                     if(tmp.pointContainsMe(mouseX, mouseY)){
@@ -230,12 +166,8 @@ public class PlayAreaPanel extends javax.swing.JPanel implements PlayAreaHandler
         super.paintComponent(g); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
         
         Graphics2D g2 = (Graphics2D) g;
-        /* From https://stackoverflow.com/questions/1439022/get-mouse-position (stack overflow... sorry not sorry)
-        PointerInfo mouse = MouseInfo.getPointerInfo();
-        Point point = new Point(mouse.getLocation()); 
-        double mouseX = point.getX();
-        double mouseY = point.getY(); */
         
+        // For drawing the cursor.
         if ((toolType == ToolType.OFFENSE) && (inPlayArea == true)) {
             g2.setColor(Color.DARK_GRAY);
             g2.setStroke(new BasicStroke(4));
@@ -247,9 +179,10 @@ public class PlayAreaPanel extends javax.swing.JPanel implements PlayAreaHandler
             g2.drawLine(cursorX - 15, cursorY + 15, cursorX + 15, cursorY - 15);
         }
         
-        currentPlay.drawPlayers(g2);
-        currentPlay.drawPaths(g2);
-        
+        if (currentPlay.getNumOPlayers() > 0 || currentPlay.getNumDPlayers() > 0) {
+            currentPlay.drawPlayers(g2);
+            currentPlay.drawPaths(g2);
+        }
     }
 
 

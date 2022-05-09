@@ -6,52 +6,69 @@
 package playmaker.model;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.swing.Timer;
-import playmaker.ui.PlayAreaHandler;
+import playmaker.ui.RepaintHandler;
 
 /**
  *
  * @author carl
  */
-public abstract class Player implements ActionListener {
+public abstract class Player implements ActionListener, Serializable {
     protected String side;
+    protected String pos = "<Select>";
+    protected String name = "Enter";
+    protected String habit = "Enter";
+    protected String job;
+    protected String num = "Enter";
+    protected transient Color color;
+    protected boolean scoutView;
+    
     protected double playerX, playerY;
     protected int playerW = 30;
     protected int playerH = 30;
     protected int halfW = playerW/2;
     protected int halfH = playerH/2;
-    protected Color color;
-    
     protected double xDif, yDif, xVel, yVel;
     protected String xDir, yDir;
     
     protected Path path;
-    protected String position;
     protected ArrayList<Integer> pathX;
     protected ArrayList<Integer> pathY;
-
-    protected PlayAreaHandler listener;
+    
+    protected transient RepaintHandler handler;
     
     int nextPoint = 1;
     int pastPoint = 0;
     
-    private Timer tm = new Timer(33, this); // 33 for ~30 frames a second. 
+    private transient Timer tm = new Timer(33, this); // 33 for ~30 frames a second. 
                                             // The purpose for this timer is to update the position of the player
-                                            // using the x velocity and y velocity and call redraw when the position is updated.
-
+                                            // using the x velocity and y velocity and call redraw when the position is updated.   
+    
     public double getX() {return playerX;}  
     public double getY() {return playerY;}    
-    public String getPos() {return position; }    
+    public String getPos() {return pos;} 
+    public String getJob() {return job;}
+    public String getName() {return name;}
+    public String getNum() {return num;}
+    public String getHabit() {return habit;}
+    
+    public void setJob(String tmp) {job = tmp;}
+    public void setName(String tmp) {name = tmp;}
+    public void setNum(String tmp) {num = tmp;}
+    public void setHabit(String tmp) {habit = tmp;}
     public void setX(int x) {this.playerX = x;}   
     public void setY(int y) {this.playerY = y;}   
-    public void setPos(String position) {this.position = position; }
-    public void repaint() {listener.repaintArea();}
+    public void setPos(String pos) {this.pos = pos;}
+    public void setNewTimer() {tm = new Timer(33, this);}
+    public void setScoutView(boolean scoutView) {this.scoutView = scoutView;}
+    
+    public boolean isScoutView() {return scoutView;}
+    
     public abstract void paint(Graphics2D g2);
     
     // Calulates the distance from the click and the center position of this player,
@@ -118,7 +135,7 @@ public abstract class Player implements ActionListener {
             playerY = playerY + yVel;
         }
         
-        listener.repaintArea();
+        handler.repaintArea();
     }
     
     
@@ -159,6 +176,7 @@ public abstract class Player implements ActionListener {
     public void reset() {
         playerX = path.getStartX();
         playerY = path.getStartY();
+        handler.repaintArea();
     }
     
     public void stop() {
