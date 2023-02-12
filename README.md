@@ -1,7 +1,5 @@
 # Carl Lund
-# Visual Programming II - Final Project
-
-## About
+## Visual Programming II - Final Project
   For this school project, we were tasked with developing our own application over the entire semester 
 using Java Swift for both the back end and front end. We used NetBeans as our IDE to build the project 
 and uploaded everything here to GitHub. Besides providing a complete separate presentation and written 
