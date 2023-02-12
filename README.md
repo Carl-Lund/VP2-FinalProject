@@ -16,3 +16,10 @@ by drawing offensive and defensive players within the play area. Then they can g
 about each player by describing different aspects like their play path, role, position, etc.
 
 Below is a quick video tutorial on the project I created:
+
+https://user-images.githubusercontent.com/123399393/218291443-f9369bca-94fb-43aa-af3d-06c7e97a387c.mp4
+
+This next video shows how users can save json versions of their plays to their system and then upload
+them to the software if they'd like to share their plays with others:
+
+https://user-images.githubusercontent.com/123399393/218291482-7c012b37-5f05-4472-b306-828fc08c43a6.mp4
